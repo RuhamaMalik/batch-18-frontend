@@ -5,29 +5,31 @@ import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
 import Form from "../components/Form";
 
-
 const router = createBrowserRouter([
-{
-    path:"/",
-    element:<App/>,
-    children:[
-        {
-           index:true,
-            element:<Home/>
-        },{
-            path:'forgot-password',
-            element:<ForgotPassword/>
-        
-        },{
-            path:'reset-password',
-            element:<ResetPassword/>
-        },{
-            path:'auth',
-            element:<Form/>
-        }
-    ]
-}
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      {
+        index: true,
+        element: (
+            <Home />
+        ),
+      },
+      {
+        path: "forgot-password",
+        element: <ForgotPassword />,
+      },
+      {
+        path: "reset-password/:token",
+        element: <ResetPassword />,
+      },
+      {
+        path: "auth",
+        element: <Form />,
+      },
+    ],
+  },
 ]);
-
 
 export default router;

@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -6,14 +7,25 @@ export default function ForgotPassword() {
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!/^\S+@\S+\.\S+$/.test(email)) {
       setError("Enter a valid email address.");
       return;
     }
-    setError("");
-    setSent(true); // UI only: call your API here
+
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/auth/forgot-password`,
+        { email },
+      );
+      setError("");
+      setSent(true);
+    } catch (error) {
+      setError(error.message);
+    }
+
+    // UI only: call your API here
   };
 
   return (
@@ -41,8 +53,8 @@ export default function ForgotPassword() {
               Forgot your password?
             </h1>
             <p className="mt-2 text-sm text-slate-500">
-              Enter the email linked to your account and we’ll send you a link to
-              reset your password.
+              Enter the email linked to your account and we’ll send you a link
+              to reset your password.
             </p>
 
             <form onSubmit={handleSubmit} noValidate className="mt-6 space-y-5">
@@ -67,7 +79,9 @@ export default function ForgotPassword() {
                       : "border-slate-300 focus:border-indigo-500 focus:ring-indigo-200"
                   }`}
                 />
-                {error && <p className="mt-1.5 text-sm text-red-600">{error}</p>}
+                {error && (
+                  <p className="mt-1.5 text-sm text-red-600">{error}</p>
+                )}
               </div>
 
               <button

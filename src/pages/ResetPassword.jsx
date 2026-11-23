@@ -1,5 +1,6 @@
+import axios from "axios";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 
 function PasswordField({ id, label, value, onChange, error, autoComplete }) {
   const [show, setShow] = useState(false);
@@ -40,19 +41,45 @@ function PasswordField({ id, label, value, onChange, error, autoComplete }) {
 }
 
 export default function ResetPassword() {
+  const { token } = useParams();
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [errors, setErrors] = useState({});
   const [done, setDone] = useState(false);
 
-  const handleSubmit = (e) => {
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const next = {};
     if (password.length < 8) next.password = "Use at least 8 characters.";
     if (confirm !== password) next.confirm = "Passwords don’t match.";
     setErrors(next);
-    if (Object.keys(next).length === 0) setDone(true); // UI only: call your API here
+    if (Object.keys(next).length === 0) {
+
+      
+      /////////////////////////////////////////
+      try {
+    const {data} =   await  axios.post(`${import.meta.env.VITE_BASE_URL}/auth/reset-password`, {
+          token,
+          password,
+        });
+
+        setDone(true);
+
+      } catch (error) {
+        console.log(error.message);
+        errors.error = "Password Reset Fail";
+      }
+
+      ///////////////////////////////////////
+    }
+
+     // UI only: call your API here
   };
+
+
+
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
@@ -66,7 +93,9 @@ export default function ResetPassword() {
               Choose a password you haven’t used before. It must be at least 8
               characters.
             </p>
-
+            {errors?.error && (
+              <p className="mt-2 text-sm text-red-500">{errors.error || ""}</p>
+            )}
             <form onSubmit={handleSubmit} noValidate className="mt-6 space-y-5">
               <PasswordField
                 id="password"
@@ -117,7 +146,7 @@ export default function ResetPassword() {
               You can now sign in with your new password.
             </p>
             <NavLink
-              to="/login"
+              to="/auth"
               className="mt-6 inline-block w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700"
             >
               Go to sign in
