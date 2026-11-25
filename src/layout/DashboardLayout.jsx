@@ -3,6 +3,7 @@ import { TextInput } from "flowbite-react";
 // import { HiChartPie, HiUser, HiCog, HiLogout, HiSearch, HiMenu, HiX } from "react-icons/hi";
 import { HiSearch, HiMenu } from "react-icons/hi";
 import Sidebar from "../components/dashboard/Sidebar";
+import { Outlet } from "react-router-dom";
 
 
 function Dashboard() {
@@ -57,11 +58,13 @@ function Dashboard() {
         <main className="flex-1 overflow-y-auto p-6 bg-gray-900">
           <div className="max-w-7xl mx-auto">
             {/* Welcome Banner */}
-          
+
+            <Outlet/>
+{/*           
             <div className="bg-gradient-to-r from-indigo-700 to-purple-700 rounded-2xl p-8 mb-6 shadow-lg text-white">
               <h1 className="text-3xl font-bold mb-2">Good Morning class 👋</h1>
               <p className="text-indigo-200">Here is what's happening with your project today.</p>
-            </div>
+            </div> */}
             
 
           </div>

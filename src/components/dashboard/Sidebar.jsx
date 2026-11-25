@@ -1,40 +1,50 @@
 import { HiChartPie, HiUser, HiCog, HiLogout, HiX } from "react-icons/hi";
-import { getUser } from "../../utils/auth";
+import { getUser, removeToken, removeUser } from "../../utils/auth";
+import { NavLink, useNavigate } from "react-router-dom";
 
+const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
+  const navigate = useNavigate();
+  const user = getUser() || { role: "user" };
 
-const Sidebar = ({isMobileOpen, setIsMobileOpen}) => {
-
-    const user =  {role:"user"};
-
-console.log(user);
-
-const adminTabs = [
+  const adminTabs = [
     {
-       name:'Dashboard',
-       icon: <HiChartPie className="w-5 h-5" />,
-       path:'/dashboard'
+      name: "Dashboard",
+      icon: <HiChartPie className="w-5 h-5" />,
+      path: "/dashboard",
+    },
+    {
+      name: "Users",
+      icon: <HiChartPie className="w-5 h-5" />,
+      path: "/dashboard/users",
     },
      {
-       name:'Users',
-       icon: <HiChartPie className="w-5 h-5" />,
-       path:'/dashboard/users'
+      name: "Articles",
+      icon: <HiChartPie className="w-5 h-5" />,
+      path: "/dashboard/articles",
     },
-]
-const userTabs = [
- {
-       name:'Profile',
-       icon: <HiUser className="w-5 h-5" />,
-       path:'/dashboard/profile'
+  ];
+  const userTabs = [
+    {
+      name: "Profile",
+      icon: <HiUser className="w-5 h-5" />,
+      path: "/user/dashboard/profile",
     },
- {
-       name:'Settings',
-       icon: <HiUser className="w-5 h-5" />,
-       path:'/dashboard/settings'
+    {
+      name: "Settings",
+      icon: <HiUser className="w-5 h-5" />,
+      path: "/user/dashboard/settings",
     },
-]
+  ];
 
-const  tabs = user?.role === "admin" ? adminTabs : userTabs;
+  const tabs = user?.role === "admin" ? adminTabs : userTabs;
 
+
+
+const handleLogout = ()=>{
+  removeUser();
+  removeToken();
+  navigate("/")
+}
 
 
   return (
@@ -54,7 +64,7 @@ const  tabs = user?.role === "admin" ? adminTabs : userTabs;
                 M
               </div>
               <span className="text-lg font-semibold tracking-wide text-white">
-                MernDashboard
+                {user?.role === "admin" ? "ADMIN DASHBOARD" : "User Profile"}
               </span>
             </div>
             {/* Close Button for Mobile */}
@@ -68,35 +78,25 @@ const  tabs = user?.role === "admin" ? adminTabs : userTabs;
 
           {/* Sidebar Links with Hover Effect */}
           <div className="px-4 py-4 space-y-2">
-            <a
-              href="#"
-              className="flex items-center gap-3 px-4 py-3 text-md font-medium rounded-lg text-gray-300 hover:bg-indigo-600 hover:text-white transition-colors"
-            >
-              <HiChartPie className="w-5 h-5" /> Dashboard
-            </a>
-            <a
-              href="#"
-              className="flex items-center gap-3 px-4 py-3 text-md font-medium rounded-lg text-gray-300 hover:bg-indigo-600 hover:text-white transition-colors"
-            >
-              <HiUser className="w-5 h-5" /> Profile
-            </a>
-            <a
-              href="#"
-              className="flex items-center gap-3 px-4 py-3 text-md font-medium rounded-lg text-gray-300 hover:bg-indigo-600 hover:text-white transition-colors"
-            >
-              <HiCog className="w-5 h-5" /> Settings
-            </a>
+            {tabs?.map((tab, i) => (
+              <NavLink
+                to={tab?.path}
+                className="flex items-center gap-3 px-4 py-3 text-md font-medium rounded-lg text-gray-300 hover:bg-indigo-600 hover:text-white transition-colors"
+              >
+                {tab.icon} {tab?.name || "Tab"}
+              </NavLink>
+            ))}
           </div>
         </div>
 
         {/* Logout at bottom */}
         <div className="p-4 border-t border-gray-700">
-          <a
-            href="#"
-            className="flex items-center gap-3 px-4 py-3 text-md font-medium rounded-lg text-red-400 hover:bg-red-600 hover:text-white transition-colors"
+          <div
+          onClick={handleLogout}
+            className="flex cursor-pointer items-center gap-3 px-4 py-3 text-md font-medium rounded-lg text-red-400 hover:bg-red-600 hover:text-white transition-colors"
           >
             <HiLogout className="w-5 h-5" /> Logout
-          </a>
+          </div>
         </div>
       </aside>
 

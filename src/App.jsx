@@ -3,7 +3,6 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import { useAuthContext } from "./context/AuthContext";
 import { Outlet } from "react-router-dom";
-import Dashboard from "./layout/DashboardLayout";
 
 function App() {
   let { loading } = useAuthContext();
@@ -17,7 +16,6 @@ function App() {
   return (
     <>
       <Header />
-      <Dashboard/>
       <Outlet />
       <Footer />
     </>
